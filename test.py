@@ -66,27 +66,16 @@ if __name__ == '__main__':
         std_trnsf.ToTensor()
         ])
 
-    test_loader = get_loader(dataset=args.dataset,
-                             data_dir=data_dir,
-                             train=False,
-                             joint_transforms=test_joint_transforms,
-                             image_transforms=test_image_transforms,
-                             mask_transforms=mask_transforms,
-                             batch_size=1,
-                             shuffle=False,
-                             num_workers=4)
- 
-
-    # prepare images
-    # imgs = [os.path.join(img_dir, k) for k in sorted(os.listdir(img_dir)) if k.endswith('.jpg')]
-    
-    imgs = glob.glob(os.path.join(img_dir, '.*'))
-    
+    imgs = glob.glob(os.path.join(img_dir, '*.*'))
+    print('image lens:{}'.format(len(imgs))) 
     with torch.no_grad():
         for i, img_path in enumerate(imgs):
-            img = Image.open(img_path)
+            net.eval()
+            img = cv2.imread(img_path)
+            print('image shape: {}'.format(img))
             data = test_image_transforms(img)
-        
+            data = np.expand_dims(data,axis =0)
+            #data = data.to(device) 
             
         #
         #
